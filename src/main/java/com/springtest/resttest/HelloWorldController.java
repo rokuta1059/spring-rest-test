@@ -17,4 +17,11 @@ public class HelloWorldController {
     public String helloworld() {
         return "Hello World";
     }
+
+    @GetMapping("/hello-world-bean")
+    public HelloWorldBean helloworldBean() {
+        // 반환 형태는 Bean 형태
+        // Spring에서는 이를 JSON 형태로 자동으로 반환함
+        return new HelloWorldBean("Hello World");
+    }
 }
