@@ -1,6 +1,7 @@
 package com.springtest.resttest;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -23,5 +24,15 @@ public class HelloWorldController {
         // 반환 형태는 Bean 형태
         // Spring에서는 이를 JSON 형태로 자동으로 반환함
         return new HelloWorldBean("Hello World");
+    }
+
+    // 가변 데이터를 가지고 있다
+    // 변수 옆에 반드시 @PathVariable를 붙여주어 사용 가능하도록 한다
+    // 오버로딩
+    // 다른 값을 사용하고 싶은 경우 @PathVariable(value = "name")와 같이 사용
+    @GetMapping("/hello-world-bean/{name}")
+    public HelloWorldBean helloworldBean(@PathVariable String name) {
+
+        return new HelloWorldBean(String.format("Hello, %s!", name));
     }
 }

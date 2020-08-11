@@ -1,3 +1,9 @@
 server:
-  port:
-    8888
+  # 서버 포트 지정
+  port: 8888
+
+logging:
+  level:
+    # 상세 로그 출력을 위하여 debug로 설정
+    # info, debug, error 등으로 설정 가능
+    org.springframework: debug
