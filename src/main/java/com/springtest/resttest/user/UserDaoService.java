@@ -1,5 +1,7 @@
 package com.springtest.resttest.user;
 
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.List;
  * 사용자 관련 로직이 저장된 클래스
  * 메모리에 데이터를 작성하고 테스트한다
  */
+@Service    // Bean의 용도 설정
 public class UserDaoService {
     private static List<User> users = new ArrayList<User>();
 
