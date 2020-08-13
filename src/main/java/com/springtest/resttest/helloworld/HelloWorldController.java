@@ -1,4 +1,4 @@
-package com.springtest.resttest;
+package com.springtest.resttest.helloworld;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

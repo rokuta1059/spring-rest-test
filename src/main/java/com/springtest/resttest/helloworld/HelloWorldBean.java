@@ -1,4 +1,4 @@
-package com.springtest.resttest;
+package com.springtest.resttest.helloworld;
 
 // lombok을 사용하여 메소드를 자동으로 생성하도록 하자
 // 어노테이션 입력 후 lombok으로 생성
