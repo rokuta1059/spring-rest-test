@@ -1,8 +1,6 @@
 package com.springtest.resttest.user;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,5 +36,13 @@ public class UserController {
     @GetMapping("/users/{id}")
     public User retrieveUser(@PathVariable int id) {
         return service.findOne(id);
+    }
+
+    // POST /users
+    // /users 호출 시 POST로 호출하게 된다
+    // @RequestBody를 이용하여 값을 Body에서 받아온다
+    @PostMapping("/users")
+    public void createUser(@RequestBody User user) {
+        User savedUser = service.save(user);
     }
 }
