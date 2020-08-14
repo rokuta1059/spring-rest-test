@@ -67,4 +67,26 @@ public class UserController {
                 .toUri();                                   // 모든 형태를 URI 형태로 변경
         return ResponseEntity.created(location).build();
     }
+
+    // DELETE /users/{id}
+    // DELETE로 호출 시 실행
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable int id) {
+        User user = service.deleteUserById(id);
+
+        if (user == null) {
+            throw new UserNotFoundException(String.format("ID[%s] not found", id));
+        }
+    }
+
+    // PUT /users
+    // PUT로 호출 시 실행
+    @PutMapping("/users")
+    public void changeUserName(@RequestBody User inputUser) {
+        User user = service.changeUserNameById(inputUser.getId(), inputUser.getName());
+
+        if (user == null) {
+            throw new UserNotFoundException(String.format("ID[%s] not found", user.getId()));
+        }
+    }
 }

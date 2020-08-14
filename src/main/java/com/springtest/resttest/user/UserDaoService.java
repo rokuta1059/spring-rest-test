@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -57,6 +58,37 @@ public class UserDaoService {
     public User findOne(int id) {
         for (User user : users) {
             if (user.getId() == id) {
+                return user;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * user id 기준으로 해당 id를 가진 유저를 삭제한다
+     * @param id
+     * @return
+     */
+    public User deleteUserById(int id) {
+
+        // 현재 데이터베이스를 사용하지 않고 List에서 임시로 데이터를 저장해 사용중
+        Iterator<User> it = users.iterator();
+        while(it.hasNext()) {
+            User user = it.next();
+            if (user.getId() == id) {
+                it.remove();
+                return user;
+            }
+        }
+
+        return null;
+    }
+
+    public User changeUserNameById(int id, String name) {
+        for (User user : users) {
+            if (user.getId() == id) {
+                user.setName(name);
                 return user;
             }
         }
