@@ -40,6 +40,10 @@ public class UserDaoService {
         if (user.getId() == null) {
             user.setId(++usersCount);
         }
+        // 현재 시간을 부여한다
+        if (user.getJoinDate() == null) {
+            user.setJoinDate(new Date());
+        }
 
         users.add(user);
         return user;

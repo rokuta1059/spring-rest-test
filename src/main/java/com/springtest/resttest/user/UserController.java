@@ -1,7 +1,10 @@
 package com.springtest.resttest.user;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -42,7 +45,17 @@ public class UserController {
     // /users 호출 시 POST로 호출하게 된다
     // @RequestBody를 이용하여 값을 Body에서 받아온다
     @PostMapping("/users")
-    public void createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody User user) {
         User savedUser = service.save(user);
+
+        // 사용자에게 요청값을 반환하기 위해 ServletUriComponentsBuilder를 사용한다
+        // 새로운 유저가 추가된 경우 상황에 맞는 상태값이 반환되며
+        // headers의 location값에 생성 완료된 사용자의 URL이 전달된다
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()                       // 현재 가지고있는 Request값을 사용
+                .path("/{id}")                              // 반환값 지정
+                .buildAndExpand(savedUser.getId())          // 반환값에서 지정한 가변 변수 지정
+                .toUri();                                   // 모든 형태를 URI 형태로 변경
+        return ResponseEntity.created(location).build();
     }
 }
