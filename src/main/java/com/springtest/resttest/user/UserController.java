@@ -38,7 +38,16 @@ public class UserController {
     // 함수 선언시 int로 선언하게 되면 자동으로 int형으로 변환된다
     @GetMapping("/users/{id}")
     public User retrieveUser(@PathVariable int id) {
-        return service.findOne(id);
+
+        // return service.findOne(id);
+        // 기존 방식의 경우 존재하지 않는 id를 호출 시 null이 반환된다
+        // 이 경우 null을 반환하지만 어플리케이션 작동에는 문제가 없다는 200 status가 반환되게 된다
+
+        User user = service.findOne(id);
+        if (user == null) {
+            throw new UserNotFoundException(String.format("ID[%s] not found", id));
+        }
+        return user;
     }
 
     // POST /users
