@@ -1,8 +1,10 @@
 package com.springtest.resttest.exception;
 
 import com.springtest.resttest.user.UserNotFoundException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +35,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
     /**
      * UserNotFoundException이 발생한 경우 호출되는 메소드
-     * @param ex 메소드에서 발ㄹ생한 에러 객체
+     * @param ex 메소드에서 발생한 에러 객체
      * @param request 에러가 발생한 위치 정보
      * @return
      */
@@ -44,5 +46,23 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 
         // 정보가 존재하지 않는 것이므로 404
         return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * ResponseEntityExceptionHandler class의 handleMethodArgumentNotValid 메소드를 Override 하여 재정의
+     * @param ex 메소드에서 발생한 에러 객체
+     * @param headers 헤더 정보
+     * @param status 상태 정보
+     * @param request 요청값
+     * @return 오류 Entity
+     */
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+        // 날짜 및 시간, 에러 메세지, 에러 상세 내용
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(),
+                "Validation Failed", ex.getBindingResult().toString());
+
+        return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 }

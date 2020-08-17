@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -50,11 +51,16 @@ public class UserController {
         return user;
     }
 
-    // POST /users
-    // /users 호출 시 POST로 호출하게 된다
-    // @RequestBody를 이용하여 값을 Body에서 받아온다
+    /**
+     * POST /users
+     * /users 호출 시 POST로 호출하게 되며, 해당하는 user를 추가한다.
+     * @RequestBody 를 이용하여 값을 Body에서 받아온다
+     * @Valid 를 통하여 유효성 검사를 진행한다
+     * @param user 추가하려는 user
+     * @return 추가 완료된 user
+     */
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         User savedUser = service.save(user);
 
         // 사용자에게 요청값을 반환하기 위해 ServletUriComponentsBuilder를 사용한다
