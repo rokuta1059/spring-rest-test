@@ -7,3 +7,7 @@ logging:
     # 상세 로그 출력을 위하여 debug로 설정
     # info, debug, error 등으로 설정 가능
     org.springframework: info
+
+spirng:
+  messages:
+    basename: messages # 다국어 파일의 이름을 messages로 지정

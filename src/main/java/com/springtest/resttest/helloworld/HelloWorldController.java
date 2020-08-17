@@ -1,12 +1,22 @@
 package com.springtest.resttest.helloworld;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Locale;
 
 
 @RestController // 어노테이션을 반드시 입력해 주어야 함
 public class HelloWorldController {
+
+    // 동일한 타입의 Bean 을 자동으로 주입하여 준다
+    @Autowired
+    private MessageSource messageSource;
+
     // GET 방식의 메소드 형태로 제작
     // url : /hello-world (endpoint)
     //
@@ -34,5 +44,19 @@ public class HelloWorldController {
     public HelloWorldBean helloworldBean(@PathVariable String name) {
 
         return new HelloWorldBean(String.format("Hello, %s!", name));
+    }
+
+    /**
+     * 다국어 처리 테스트용 메소드
+     * 헤더에 들어있는 언어값을 이용하여 해당 언어에 맞는 인사말을 출력한다다
+     *@param locale
+     * @return
+     */
+    @GetMapping("/hello-world-international")
+    public String helloWorldInternationalized(
+            @RequestHeader(name="Accept-Language", required=false) Locale locale) {
+        // 선언한 리소스를 통해 메세지를 받아온다
+        // Key값, (Key값이 가변변수를 가지고있는 문자열인 경우) 파라메터, locale값
+        return messageSource.getMessage("greeting.message", null, locale);
     }
 }
