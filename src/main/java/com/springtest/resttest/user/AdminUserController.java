@@ -3,6 +3,7 @@ package com.springtest.resttest.user;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +63,7 @@ public class AdminUserController {
      * @param id
      * @return
      */
-    @GetMapping("/users/{id}")
+    @GetMapping("/v1/users/{id}")
     public MappingJacksonValue retrieveUser(@PathVariable int id) {
 
         User user = service.findOne(id);
@@ -80,6 +81,40 @@ public class AdminUserController {
                 .addFilter("UserInfo", filter);
 
         MappingJacksonValue mapping = new MappingJacksonValue(user);
+        mapping.setFilters(filters);
+
+        return mapping;
+    }
+
+    /**
+     * id에 해당하는 User 를 반환한다
+     * filter 가 적용되어 사용될 수 있는 MappingJacksonValue 타입으로 반환한다
+     * @param id
+     * @return
+     */
+    @GetMapping("/v2/users/{id}")
+    public MappingJacksonValue retrieveUserV2(@PathVariable int id) {
+
+        User user = service.findOne(id);
+        if (user == null) {
+            throw new UserNotFoundException(String.format("ID[%s] not found", id));
+        }
+
+        // User -> UserV2
+        UserV2 userV2 = new UserV2();
+        BeanUtils.copyProperties(user, userV2);
+        userV2.setGrade("VIP");
+
+        // Property 를 이용하여 제어할 수 있도록 SimpleBeanPropertyFilter 생성
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter
+                .filterOutAllExcept("id", "name", "joinDate", "grade");
+
+        // 위에서 선언한 filter 를 사용할 수 있는 형태로 변환
+        // addFilter 의 인자는 User class JsonFilter 에서 지정한 값
+        FilterProvider filters = new SimpleFilterProvider()
+                .addFilter("UserInfoV2", filter);
+
+        MappingJacksonValue mapping = new MappingJacksonValue(userV2);
         mapping.setFilters(filters);
 
         return mapping;
