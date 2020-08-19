@@ -1,5 +1,7 @@
 package com.springtest.resttest.user;
 
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -7,6 +9,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * 개발자가 직접 생성하는 것이 아닌
@@ -38,7 +43,7 @@ public class UserController {
     // 컨트롤러로 id가 전달될 때에는 String으로 전달됨
     // 함수 선언시 int로 선언하게 되면 자동으로 int형으로 변환된다
     @GetMapping("/users/{id}")
-    public User retrieveUser(@PathVariable int id) {
+    public EntityModel<User> retrieveUser(@PathVariable int id) {
 
         // return service.findOne(id);
         // 기존 방식의 경우 존재하지 않는 id를 호출 시 null이 반환된다
@@ -48,7 +53,16 @@ public class UserController {
         if (user == null) {
             throw new UserNotFoundException(String.format("ID[%s] not found", id));
         }
-        return user;
+
+        // HATEOAS 구현
+        EntityModel<User> resource = new EntityModel<>(user);
+        // retrieveAllUsers 메소드와 all-users 를 연결 하이퍼미디어로 사용
+        WebMvcLinkBuilder linkTo = linkTo(
+                methodOn(this.getClass()).retrieveAllUsers()
+        );
+        resource.add(linkTo.withRel("all-users"));
+
+        return resource;
     }
 
     /**
