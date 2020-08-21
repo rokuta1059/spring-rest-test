@@ -13,3 +13,9 @@ logging:
 spirng:
   messages:
     basename: messages # 다국어 파일의 이름을 messages로 지정
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
